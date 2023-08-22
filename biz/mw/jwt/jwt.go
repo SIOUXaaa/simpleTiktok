@@ -60,6 +60,9 @@ func InitJWT() {
 				StatusMsg:  message,
 			})
 		},
+		LoginResponse: func(ctx context.Context, c *app.RequestContext, code int, token string, time time.Time) {
+			c.Set("token",token)
+		},
 		HTTPStatusMessageFunc: func(e error, ctx context.Context, c *app.RequestContext) string {
 			resp := utils.BuildBaseResp(e)
 			return resp.StatusMsg
