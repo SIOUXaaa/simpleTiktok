@@ -4,6 +4,7 @@ package comment
 
 import (
 	"github.com/cloudwego/hertz/pkg/app"
+	"simpleTiktok/biz/mw/jwt"
 )
 
 func rootMw() []app.HandlerFunc {
@@ -27,8 +28,9 @@ func _actionMw() []app.HandlerFunc {
 }
 
 func _commentactionMw() []app.HandlerFunc {
-	// your code...
-	return nil
+	return []app.HandlerFunc{
+		jwt.JwtMiddleware.MiddlewareFunc(),
+	}
 }
 
 func _listMw() []app.HandlerFunc {
@@ -37,6 +39,7 @@ func _listMw() []app.HandlerFunc {
 }
 
 func _commentlistMw() []app.HandlerFunc {
-	// your code...
-	return nil
+	return []app.HandlerFunc{
+		jwt.JwtMiddleware.MiddlewareFunc(),
+	}
 }

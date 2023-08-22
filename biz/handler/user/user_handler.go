@@ -4,10 +4,19 @@ package user
 
 import (
 	"context"
+	"fmt"
+	"net/http"
+
+	user "simpleTiktok/biz/model/basic/user"
+	"simpleTiktok/pkg/errno"
+	"simpleTiktok/pkg/utils"
+
+	service "simpleTiktok/biz/service"
+
+	"simpleTiktok/biz/mw/jwt"
 
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
-	user "simpleTiktok/biz/model/basic/user"
 )
 
 // User .
@@ -17,13 +26,23 @@ func User(ctx context.Context, c *app.RequestContext) {
 	var req user.DouyinUserRequest
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		c.String(consts.StatusBadRequest, err.Error())
+		resp := utils.BuildBaseResp(err)
+		c.JSON(consts.StatusOK, user.DouyinUserResponse{
+			StatusCode: resp.StatusCode,
+			StatusMsg:  resp.StatusMsg,
+		})
 		return
 	}
 
-	resp := new(user.DouyinUserResponse)
+	userInfo, err := service.NewUserService(ctx, c).UserInfo(&req)
 
-	c.JSON(consts.StatusOK, resp)
+	resp := utils.BuildBaseResp(err)
+	c.JSON(consts.StatusOK, user.DouyinUserResponse{
+		StatusCode: resp.StatusCode,
+		StatusMsg:  resp.StatusMsg,
+		User:       userInfo,
+	})
+
 }
 
 // UserRegister .
@@ -33,27 +52,44 @@ func UserRegister(ctx context.Context, c *app.RequestContext) {
 	var req user.DouyinUserRegisterRequest
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		c.String(consts.StatusBadRequest, err.Error())
+		resp := utils.BuildBaseResp(err)
+		c.JSON(consts.StatusOK, user.DouyinUserRegisterResponse{
+			StatusCode: resp.StatusCode,
+			StatusMsg:  resp.StatusMsg,
+		})
 		return
 	}
 
-	resp := new(user.DouyinUserRegisterResponse)
-
-	c.JSON(consts.StatusOK, resp)
+	_, err = service.NewUserService(ctx, c).UserRegister(&req)
+	if err != nil {
+		resp := utils.BuildBaseResp(err)
+		c.JSON(consts.StatusOK, user.DouyinUserRegisterResponse{
+			StatusCode: resp.StatusCode,
+			StatusMsg:  resp.StatusMsg,
+		})
+		return
+	}
+	jwt.JwtMiddleware.LoginHandler(ctx, c)
+	token := c.GetString("token")
+	id, _ := c.Get("user_id")
+	c.JSON(http.StatusOK, user.DouyinUserRegisterResponse{
+		StatusCode: errno.SuccessCode,
+		StatusMsg:  errno.SuccessMsg,
+		Token:      token,
+		UserId:     id.(int64),
+	})
 }
 
 // UserLogin .
 // @router /douyin/user/login/ [POST]
 func UserLogin(ctx context.Context, c *app.RequestContext) {
-	var err error
-	var req user.DouyinUserLoginRequest
-	err = c.BindAndValidate(&req)
-	if err != nil {
-		c.String(consts.StatusBadRequest, err.Error())
-		return
-	}
-
-	resp := new(user.DouyinUserLoginResponse)
-
-	c.JSON(consts.StatusOK, resp)
+	fmt.Println("try login")
+	id, _ := c.Get("user_id")
+	token := c.GetString("token")
+	c.JSON(http.StatusOK, user.DouyinUserLoginResponse{
+		StatusCode: errno.SuccessCode,
+		StatusMsg:  errno.SuccessMsg,
+		Token:      token,
+		UserId:     id.(int64),
+	})
 }

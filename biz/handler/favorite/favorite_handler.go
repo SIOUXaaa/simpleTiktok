@@ -5,9 +5,10 @@ package favorite
 import (
 	"context"
 
+	favorite "simpleTiktok/biz/model/interact/favorite"
+
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
-	favorite "simpleTiktok/biz/model/interact/favorite"
 )
 
 // FavoriteAction .

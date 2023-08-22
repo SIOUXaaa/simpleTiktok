@@ -3,6 +3,8 @@
 package favorite
 
 import (
+	"simpleTiktok/biz/mw/jwt"
+
 	"github.com/cloudwego/hertz/pkg/app"
 )
 
@@ -27,8 +29,9 @@ func _actionMw() []app.HandlerFunc {
 }
 
 func _favoriteactionMw() []app.HandlerFunc {
-	// your code...
-	return nil
+	return []app.HandlerFunc{
+		jwt.JwtMiddleware.MiddlewareFunc(),
+	}
 }
 
 func _listMw() []app.HandlerFunc {
@@ -37,6 +40,7 @@ func _listMw() []app.HandlerFunc {
 }
 
 func _favoritelistMw() []app.HandlerFunc {
-	// your code...
-	return nil
+	return []app.HandlerFunc{
+		jwt.JwtMiddleware.MiddlewareFunc(),
+	}
 }

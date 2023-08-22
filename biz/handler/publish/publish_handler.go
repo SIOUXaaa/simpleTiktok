@@ -5,9 +5,10 @@ package publish
 import (
 	"context"
 
+	publish "simpleTiktok/biz/model/basic/publish"
+
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
-	publish "simpleTiktok/biz/model/basic/publish"
 )
 
 // PublishAction .

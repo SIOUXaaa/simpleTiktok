@@ -5,9 +5,10 @@ package relation
 import (
 	"context"
 
+	relation "simpleTiktok/biz/model/social/relation"
+
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
-	relation "simpleTiktok/biz/model/social/relation"
 )
 
 // RelationAction .

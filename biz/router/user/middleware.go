@@ -3,6 +3,7 @@
 package user
 
 import (
+	"simpleTiktok/biz/mw/jwt"
 	"github.com/cloudwego/hertz/pkg/app"
 )
 
@@ -22,8 +23,9 @@ func _userMw() []app.HandlerFunc {
 }
 
 func _user0Mw() []app.HandlerFunc {
-	// your code...
-	return nil
+	return []app.HandlerFunc{
+		jwt.JwtMiddleware.LoginHandler,
+	}
 }
 
 func _loginMw() []app.HandlerFunc {
@@ -32,8 +34,9 @@ func _loginMw() []app.HandlerFunc {
 }
 
 func _userloginMw() []app.HandlerFunc {
-	// your code...
-	return nil
+	return []app.HandlerFunc{
+		jwt.JwtMiddleware.LoginHandler, //登录检验并发送JWT令牌
+	}
 }
 
 func _registerMw() []app.HandlerFunc {

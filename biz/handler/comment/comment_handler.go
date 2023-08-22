@@ -5,9 +5,10 @@ package comment
 import (
 	"context"
 
+	comment "simpleTiktok/biz/model/interact/comment"
+
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
-	comment "simpleTiktok/biz/model/interact/comment"
 )
 
 // CommentAction .

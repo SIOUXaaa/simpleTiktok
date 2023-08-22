@@ -2,9 +2,7 @@
 
 package relation
 
-import (
-	"github.com/cloudwego/hertz/pkg/app"
-)
+import "github.com/cloudwego/hertz/pkg/app"
 
 func rootMw() []app.HandlerFunc {
 	// your code...

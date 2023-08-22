@@ -5,9 +5,10 @@ package message
 import (
 	"context"
 
+	message "simpleTiktok/biz/model/social/message"
+
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
-	message "simpleTiktok/biz/model/social/message"
 )
 
 // MessageChat .

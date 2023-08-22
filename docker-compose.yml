@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+  mysql:
+    image: 'mysql:latest'
+    container_name: titok_mysql
+    volumes:
+      - /pkg/configs/sql:/dokcer-entrypoint-initdb.d
+    ports:
+      - "13306:3306"
+    environment:
+      - MYSQL_DATABASE=douyin
+      - MYSQL_USER=douyin
+      - MYSQL_PASSWORD=douyin123
+      - MYSQL_RANDOM_ROOT_PASSWORD="yes"
+    restart: always
