@@ -1,7 +1,6 @@
 package db
 
 import (
-	"mime/multipart"
 	"simpleTiktok/pkg/constants"
 	"time"
 )
