@@ -24,9 +24,10 @@ func NewPublishService(ctx context.Context, c *app.RequestContext) *PublishServi
 }
 
 func (s *PublishService) PublishAction(req *publish.DouyinPublishActionRequest) error {
-	v, _ := s.c.Get("current_user_id")
+	// v, _ := s.c.Get("current_user_id")
 	title := req.Title
-	user_id := v.(int64)
+	// user_id := v.(int64)
+	user_id := int64(2)
 	t := time.Now()
 	fileName := utils.NewFileName(user_id, t.Unix())
 	req.Data.Filename = fileName + path.Ext(req.Data.Filename)
@@ -36,7 +37,11 @@ func (s *PublishService) PublishAction(req *publish.DouyinPublishActionRequest) 
 		return err
 	}
 
-	buf, _ := utils.CreateSnapshot(utils.URLconvert(s.ctx, s.c, "video/" + fileName))
+	buf, err := utils.CreateSnapshot(utils.URLconvert(s.ctx, s.c, "video/" + fileName))
+	if err != nil  {
+		fmt.Println("snapshot failed: " + err.Error())
+		return err
+	}
 	_, err = minio.PutObjectByBuf(s.ctx, "snapshot", fileName+".png", buf)
 	if err != nil {
 		fmt.Println("snapshot upload failed: " + err.Error())
