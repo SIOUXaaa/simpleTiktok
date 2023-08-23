@@ -16,6 +16,17 @@ cd simpleTiktok
 docker-compose up -d
 ```
 
+## docker部署minio
+
+minio的后台网页：localhost:9001，API端口：localhost:9000
+
+后台网页可以查看bucket情况
+```
+# 使用即可同时启动mysql与minio
+docker-compose up -d 
+```
+
+
 ## 启动
 ```shell
 go mod tidy
