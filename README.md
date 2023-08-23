@@ -20,7 +20,8 @@ docker-compose up -d
 
 minio的后台网页：localhost:9001，API端口：localhost:9000
 
-后台网页可以查看bucket情况
+后台网页可以查看bucket情况，启动minio之后，进入后台网页，点击Access Keys，Create access key，然后把simpleTiktok/biz/dal/minio/init.go的Init()函数的accessKeyID和secretAccessKey改为自己新建的
+
 ```
 # 使用即可同时启动mysql与minio
 docker-compose up -d 
