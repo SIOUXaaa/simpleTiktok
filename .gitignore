@@ -20,8 +20,6 @@ _testmain.go
 *.gz
 *.psd
 *.bmd
-/video
-/img
 *.cfg
 *.pptx
 *.log
@@ -36,3 +34,5 @@ _testmain.go
 /output
 *.local.yml
 dumped_hertz_remote_config.json
+simpleTiktok
+pkg/data/minio/**		  

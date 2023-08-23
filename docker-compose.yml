@@ -3,9 +3,7 @@ version: '3'
 services:
   mysql:
     image: 'mysql:latest'
-    container_name: titok_mysql
-    volumes:
-      - /pkg/configs/sql:/dokcer-entrypoint-initdb.d
+    container_name: tiktok_mysql
     ports:
       - "13306:3306"
     environment:
@@ -13,4 +11,21 @@ services:
       - MYSQL_USER=douyin
       - MYSQL_PASSWORD=douyin123
       - MYSQL_RANDOM_ROOT_PASSWORD="yes"
+    restart: always
+
+  minio:
+    image: 'minio/minio'
+    container_name: minio_tiktok
+    hostname: "minio"
+    ports:
+      - 9000:9000 #api端口
+      - 9001:9001 #控制台端口
+    environment:
+      MINIO_ACCESS_KEY: admin
+      MINIO_SECRET_KEY: admin123
+    volumes:
+      - ./pkg/data/minio:/data:rw #映射当前目录下的data目录至容器内/data目录
+      - ./pkg/configs/minio:/root/.minio #映射配置目录
+    command: server --console-address ':9001' /data
+    privileged: true
     restart: always
