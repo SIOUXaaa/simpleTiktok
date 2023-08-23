@@ -8,7 +8,7 @@
 
 推荐使用docker，后面可能会使用minio对象存储来处理视频流
 
-**docker部署mysql**
+## docker部署mysql
 
 在docker-compose.yml文件中可以修改docker的端口映射，现在是docker的3306端口映射到本地的13306端口，如果端口冲突的话可以将13306修改为其他值，再将DSN中的端口一起修改
 ```shell
