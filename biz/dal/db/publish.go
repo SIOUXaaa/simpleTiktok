@@ -1,8 +1,9 @@
 package db
 
 import (
-	"time"
+	"mime/multipart"
 	"simpleTiktok/pkg/constants"
+	"time"
 )
 
 
@@ -28,3 +29,4 @@ func CreateVideo(video *Video) (Video_id int64, err error) {
 	}
 	return video.ID, err
 }
+
