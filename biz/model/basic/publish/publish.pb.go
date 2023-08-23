@@ -7,6 +7,7 @@
 package publish
 
 import (
+	"mime/multipart"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -28,7 +29,7 @@ type DouyinPublishActionRequest struct {
 	unknownFields protoimpl.UnknownFields
 
 	Token string `protobuf:"bytes,1,opt,name=token,proto3" json:"token,omitempty" form:"token" query:"token"`
-	Data  []byte `protobuf:"bytes,2,opt,name=data,proto3" json:"data,omitempty" form:"data" query:"data"`     // video data
+	Data  *multipart.FileHeader`protobuf:"bytes,2,opt,name=data,proto3" json:"data,omitempty" form:"data" query:"data"`     // video data
 	Title string `protobuf:"bytes,3,opt,name=title,proto3" json:"title,omitempty" form:"title" query:"title"` // video title
 }
 
@@ -71,7 +72,7 @@ func (x *DouyinPublishActionRequest) GetToken() string {
 	return ""
 }
 
-func (x *DouyinPublishActionRequest) GetData() []byte {
+func (x *DouyinPublishActionRequest) GetData() *multipart.FileHeader {
 	if x != nil {
 		return x.Data
 	}

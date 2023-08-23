@@ -15,13 +15,13 @@ import (
 
 var minioClient *minio.Client
 
-func MakeBucket(ctx context.Context, bucketName string, opts minio.MakeBucketOptions) {
+func MakeBucket(ctx context.Context, bucketName string) {
 	exists, err := minioClient.BucketExists(ctx, bucketName)
 	if err != nil {
 		fmt.Println(err)
 	}
 	if !exists {
-		err := minioClient.MakeBucket(ctx, bucketName, opts)
+		err := minioClient.MakeBucket(ctx, bucketName, minio.MakeBucketOptions{})
 		if err != nil {
 			fmt.Println("make bucket失败: " + err.Error())
 			return
@@ -31,7 +31,7 @@ func MakeBucket(ctx context.Context, bucketName string, opts minio.MakeBucketOpt
 	fmt.Println("bucket: " + bucketName + "已存在")
 }
 
-func GetObjectURL(ctx context.Context, bucketName, objectName string, opts minio.GetObjectOptions) (*url.URL, error) {
+func GetObjectURL(ctx context.Context, bucketName, objectName string) (*url.URL, error) {
 	exp := time.Hour * 24
 	url, err := minioClient.PresignedGetObject(ctx, bucketName, objectName, exp, make(url.Values))
 	if err != nil {
@@ -42,7 +42,7 @@ func GetObjectURL(ctx context.Context, bucketName, objectName string, opts minio
 	return url, err
 }
 
-func PutObjectByBuf(ctx context.Context, bucketName, objectName string, buf *bytes.Buffer, opts minio.PutObjectOptions) (minio.UploadInfo, error) {
+func PutObjectByBuf(ctx context.Context, bucketName, objectName string, buf *bytes.Buffer) (minio.UploadInfo, error) {
 	exists, err := minioClient.BucketExists(ctx, bucketName)
 	if err != nil {
 		fmt.Println("查询bucket失败" + err.Error())
@@ -52,7 +52,7 @@ func PutObjectByBuf(ctx context.Context, bucketName, objectName string, buf *byt
 		fmt.Println("bucket不存在")
 		return minio.UploadInfo{}, nil
 	}
-	info, err := minioClient.PutObject(ctx, bucketName, objectName, buf, int64(buf.Len()), opts)
+	info, err := minioClient.PutObject(ctx, bucketName, objectName, buf, int64(buf.Len()), minio.PutObjectOptions{})
 	if err != nil {
 		fmt.Println("上传object失败")
 		return minio.UploadInfo{}, nil
@@ -60,7 +60,7 @@ func PutObjectByBuf(ctx context.Context, bucketName, objectName string, buf *byt
 	return info, nil
 }
 
-func PutObject(ctx context.Context, bucketName string, file *multipart.FileHeader, opts minio.PutObjectOptions) (minio.UploadInfo, error) {
+func PutObject(ctx context.Context, bucketName string, file *multipart.FileHeader) (minio.UploadInfo, error) {
 	exists, err := minioClient.BucketExists(ctx, bucketName)
 	if err != nil {
 		fmt.Println("查询bucket失败" + err.Error())
@@ -75,7 +75,7 @@ func PutObject(ctx context.Context, bucketName string, file *multipart.FileHeade
 		fmt.Println("打开文件失败: " + err.Error())
 		return minio.UploadInfo{}, err
 	}
-	info, err := minioClient.PutObject(ctx, bucketName, file.Filename, f, file.Size, opts)
+	info, err := minioClient.PutObject(ctx, bucketName, file.Filename, f, file.Size, minio.PutObjectOptions{})
 	if err != nil {
 		fmt.Println("上传object失败")
 		return minio.UploadInfo{}, err
@@ -96,6 +96,6 @@ func Init() {
 	if err != nil {
 		log.Fatal("初始化minio错误: " + err.Error())
 	}
-	MakeBucket(context.Background(), "video", minio.MakeBucketOptions{})
-	MakeBucket(context.Background(), "snapshot", minio.MakeBucketOptions{})
+	MakeBucket(context.Background(), "video")
+	MakeBucket(context.Background(), "snapshot")
 }

@@ -2,6 +2,7 @@ package jwt
 
 import (
 	"context"
+	"fmt"
 	"simpleTiktok/biz/dal/db"
 	"simpleTiktok/biz/model/basic/user"
 	"simpleTiktok/pkg/errno"
@@ -47,7 +48,8 @@ func InitJWT() {
 			return user.ID, nil
 		},
 		Authorizator: func(data interface{}, ctx context.Context, c *app.RequestContext) bool {
-			if value, ok := data.(float64); ok {
+			value, ok := data.(float64)
+			if ok {
 				current_user_id := int64(value)
 				c.Set("current_user_id", current_user_id)
 				return true
@@ -55,6 +57,7 @@ func InitJWT() {
 			return false
 		},
 		Unauthorized: func(ctx context.Context, c *app.RequestContext, code int, message string) {
+			fmt.Println("jwt未通过")
 			c.JSON(consts.StatusOK, user.DouyinUserLoginResponse{
 				StatusCode: errno.AuthorizationFailedErr.ErrCode,
 				StatusMsg:  message,

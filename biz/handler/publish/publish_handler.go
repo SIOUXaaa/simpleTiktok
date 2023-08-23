@@ -4,8 +4,12 @@ package publish
 
 import (
 	"context"
+	"fmt"
 
 	publish "simpleTiktok/biz/model/basic/publish"
+	"simpleTiktok/biz/service"
+	"simpleTiktok/pkg/errno"
+	"simpleTiktok/pkg/utils"
 
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
@@ -18,13 +22,29 @@ func PublishAction(ctx context.Context, c *app.RequestContext) {
 	var req publish.DouyinPublishActionRequest
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		c.String(consts.StatusBadRequest, err.Error())
+		resp := utils.BuildBaseResp(err)
+		c.JSON(consts.StatusOK, publish.DouyinPublishActionResponse{
+			StatusCode: resp.StatusCode,
+			StatusMsg: resp.StatusMsg,
+		})
 		return
 	}
 
-	resp := new(publish.DouyinPublishActionResponse)
+	err = service.NewPublishService(ctx, c).PublishAction(&req)
+	fmt.Println("publish")
+	if err != nil {
+		resp := utils.BuildBaseResp(err)
+		c.JSON(consts.StatusOK, publish.DouyinPublishActionResponse{
+			StatusCode: resp.StatusCode,
+			StatusMsg: resp.StatusMsg,
+		})
+		return
+	}
+	c.JSON(consts.StatusOK, publish.DouyinPublishActionResponse{
+		StatusCode: errno.SuccessCode,
+		StatusMsg: errno.SuccessMsg,
+	})
 
-	c.JSON(consts.StatusOK, resp)
 }
 
 // PublishList .
