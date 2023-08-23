@@ -11,6 +11,8 @@ type Video struct {
 	AuthorID    int64
 	PlayURL     string
 	CoverURL    string
+	FavoriteCount int64
+	CommentCount int64
 	PublishTime time.Time
 	Title       string
 }
