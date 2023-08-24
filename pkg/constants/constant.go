@@ -35,7 +35,7 @@ const (
 	FavoriteActionType   = 1
 	UnFavoriteActionType = 2
 	MinioEndPoint        = "9000"
-	MinioAccessKeyID     = "1"
+	MinioAccessKeyID     = "admin"
 	MinioSecretAccessKey = "SztX8sYOGBI9JnCcB7Im"
 
 	MinioVideoBucketName = "videobucket"

@@ -8,6 +8,7 @@ import (
 	"simpleTiktok/biz/model/basic/feed"
 	"simpleTiktok/biz/model/common"
 	"simpleTiktok/pkg/constants"
+	"simpleTiktok/pkg/utils"
 	"time"
 )
 
@@ -63,6 +64,57 @@ func (s *FeedService) CopyVideos(result *[]*common.Video, data *[]*db.Video, use
 	return nil
 }
 
-func (s *FeedService) createVideos(item *db.Video, userId int64) *common.Video {
-	return nil
+func (s *FeedService) createVideos(data *db.Video, userId int64) *common.Video {
+	video := &common.Video{
+		Id:       data.ID,
+		PlayUrl:  utils.URLconvert(s.ctx, s.c, data.PlayURL),
+		CoverUrl: utils.URLconvert(s.ctx, s.c, data.CoverURL),
+		Title:    data.Title,
+	}
+
+	// TODO
+	//var wg sync.WaitGroup
+	//wg.Add(4)
+
+	//go func() {
+	//defer wg.Done()
+
+	//author, err := NewUserService(s.ctx, s.c).GetUserInfo(data.AuthorID, userId)
+	//if err != nil {
+	//	log.Printf("GetUserInfo func error:" + err.Error())
+	//}
+	//video.Author = &common.User{
+	//	Id:              author.Id,
+	//	Name:            author.Name,
+	//	FollowCount:     author.FollowCount,
+	//	FollowerCount:   author.FollowerCount,
+	//	IsFollow:        author.IsFollow,
+	//	Avatar:          author.Avatar,
+	//	BackgroundImage: author.BackgroundImage,
+	//	Signature:       author.Signature,
+	//	TotalFavorited:  author.TotalFavorited,
+	//	WorkCount:       author.WorkCount,
+	//	FavoriteCount:   author.FavoriteCount,
+	//}
+	//}()
+
+	video.Author = &common.User{
+		Id:              1000,
+		Name:            "test",
+		FollowCount:     0,
+		FollowerCount:   0,
+		IsFollow:        false,
+		Avatar:          "",
+		BackgroundImage: "",
+		Signature:       "",
+		TotalFavorited:  0,
+		WorkCount:       0,
+		FavoriteCount:   0,
+	}
+
+	video.CommentCount = 0
+	video.FavoriteCount = 0
+	video.IsFavorite = false
+
+	return video
 }
