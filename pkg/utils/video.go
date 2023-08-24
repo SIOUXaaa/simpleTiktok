@@ -21,7 +21,9 @@ import (
 	"fmt"
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
-	"simpleTiktok/biz/mw/minio"
+	"github.com/minio/minio-go/v7"
+
+	min "simpleTiktok/biz/dal/minio"
 	"strings"
 )
 
@@ -35,14 +37,16 @@ func URLconvert(ctx context.Context, c *app.RequestContext, path string) (fullUR
 	if len(path) == 0 {
 		return ""
 	}
+	fmt.Println(path)
 	arr := strings.Split(path, "/")
-	u, err := minio.GetObjURL(ctx, arr[0], arr[1])
+	opts := minio.GetObjectOptions{}
+	u, err := min.GetObjectURL(ctx, arr[0], arr[1], opts)
 	if err != nil {
 		hlog.CtxInfof(ctx, err.Error())
 		return ""
 	}
-	u.Scheme = string(c.URI().Scheme())
-	u.Host = string(c.URI().Host())
-	u.Path = "/src" + u.Path
+	//u.Scheme = string(c.URI().Scheme())
+	//u.Host = string(c.URI().Host())
+	//u.Path = "/src" + u.Path
 	return u.String()
 }

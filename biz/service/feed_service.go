@@ -66,10 +66,13 @@ func (s *FeedService) CopyVideos(result *[]*common.Video, data *[]*db.Video, use
 
 func (s *FeedService) createVideos(data *db.Video, userId int64) *common.Video {
 	video := &common.Video{
-		Id:       data.ID,
-		PlayUrl:  utils.URLconvert(s.ctx, s.c, data.PlayURL),
-		CoverUrl: utils.URLconvert(s.ctx, s.c, data.CoverURL),
-		Title:    data.Title,
+		Id:            data.ID,
+		PlayUrl:       utils.URLconvert(s.ctx, s.c, data.PlayURL),
+		CoverUrl:      utils.URLconvert(s.ctx, s.c, data.CoverURL),
+		Title:         data.Title,
+		CommentCount:  1000,
+		FavoriteCount: 1000,
+		IsFavorite:    true,
 	}
 
 	// TODO
@@ -101,20 +104,20 @@ func (s *FeedService) createVideos(data *db.Video, userId int64) *common.Video {
 	video.Author = &common.User{
 		Id:              1000,
 		Name:            "test",
-		FollowCount:     0,
-		FollowerCount:   0,
+		FollowCount:     1000,
+		FollowerCount:   110,
 		IsFollow:        false,
-		Avatar:          "",
-		BackgroundImage: "",
-		Signature:       "",
-		TotalFavorited:  0,
-		WorkCount:       0,
-		FavoriteCount:   0,
+		Avatar:          "11",
+		BackgroundImage: "11",
+		Signature:       "11",
+		TotalFavorited:  1110,
+		WorkCount:       110,
+		FavoriteCount:   110,
 	}
 
-	video.CommentCount = 0
-	video.FavoriteCount = 0
-	video.IsFavorite = false
+	//video.CommentCount = 0
+	//video.FavoriteCount = 0
+	//video.IsFavorite = false
 
 	return video
 }

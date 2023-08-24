@@ -28,7 +28,7 @@ func CreateVideo(video *Video) (Video_id int64, err error) {
 
 func GetVideosByLastTime(LastTime time.Time) ([]*Video, error) {
 	videos := make([]*Video, constants.VideoFeedCount)
-	err := DB.Where("publish_time < ?", LastTime).Order("publish_time desc").Limit(constants.VideoFeedCount).Find(&videos).Error
+	err := DB.Where("publish_time <= ?", LastTime).Order("publish_time desc").Limit(constants.VideoFeedCount).Find(&videos).Error
 	if err != nil {
 		return nil, err
 	}
