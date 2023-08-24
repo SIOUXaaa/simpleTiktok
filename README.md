@@ -27,6 +27,13 @@ minio的后台网页：localhost:9001，API端口：localhost:9000
 docker-compose up -d 
 ```
 
+## 上传视频
+视频和封面保存格式如下
+
+| play_url    | cover_url       |
+| ----------- | --------------- |
+| video/1.mp4 | snapshot/1.jpeg |
+
 
 ## 启动
 ```shell
