@@ -17,7 +17,7 @@ docker-compose up -d
 ```
 
 ---
-minio改为部署到服务器上了，服务器地址在constants里
+**minio改为部署到服务器上了，服务器地址在constants里**
 ## docker部署minio
 
 minio的后台网页：localhost:9001，API端口：localhost:9000
