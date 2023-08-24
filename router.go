@@ -3,13 +3,18 @@
 package main
 
 import (
-	"github.com/cloudwego/hertz/pkg/app/server"
 	handler "simpleTiktok/biz/handler"
+	"simpleTiktok/biz/mw/jwt"
+
+	"github.com/cloudwego/hertz/pkg/app"
+	"github.com/cloudwego/hertz/pkg/app/server"
 )
 
 // customizeRegister registers customize routers.
 func customizedRegister(r *server.Hertz) {
-	r.GET("/ping", handler.Ping)
+	r.GET("/ping", append([]app.HandlerFunc{
+		jwt.JwtMiddleware.MiddlewareFunc(),
+	},handler.Ping)...)
 
 	// your code ...
 }

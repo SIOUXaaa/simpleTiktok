@@ -6,8 +6,6 @@ import (
 	"fmt"
 	"log"
 	"mime/multipart"
-	"net/url"
-	"time"
 
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
@@ -29,18 +27,14 @@ func MakeBucket(ctx context.Context, bucketName string) {
 		fmt.Println("新建bucket成功")
 	}
 	fmt.Println("bucket: " + bucketName + "已存在")
-}
-
-func GetObjectURL(ctx context.Context, bucketName, objectName string) (*url.URL, error) {
-	exp := time.Hour * 24
-	url, err := minioClient.PresignedGetObject(ctx, bucketName, objectName, exp, make(url.Values))
-	if err != nil {
-		fmt.Println("获取object: " + objectName + "失败")
-		return nil, err
+	err = minioClient.SetBucketPolicy(ctx, bucketName, createPolicy(bucketName))
+	if err !=  nil {
+		fmt.Println(err)
 	}
-
-	return url, err
+	fmt.Println("bucket: set policy to public")
 }
+
+
 
 func PutObjectByBuf(ctx context.Context, bucketName, objectName string, buf *bytes.Buffer) (minio.UploadInfo, error) {
 	exists, err := minioClient.BucketExists(ctx, bucketName)
@@ -83,11 +77,27 @@ func PutObject(ctx context.Context, bucketName string, file *multipart.FileHeade
 	return info, nil
 }
 
+func createPolicy (bucketName string) string {
+	return `{
+		"Version": "2012-10-17",
+		"Statement": [
+			{
+				"Action": ["s3:GetObject"],
+				"Effect": "Allow",
+				"Principal": "*",
+				"Resource": ["arn:aws:s3:::` + bucketName + `/*"],
+				"Sid": ""
+			}
+		]
+	}`
+}
+
+
 func Init() {
 	var err error
 	endpoint := "127.0.0.1:9000"
-	accessKeyID := "SztX8sYOGBl9JnCcB7Im"
-	secretAccessKey := "nYRmoFcVXvBheSfLXq74VNxCuzuQOrDBh2wiRSio"
+	accessKeyID := "n4PBJzjWFTLyVlstiziA"
+	secretAccessKey := "4AZemVSPlHBVDZNNFdxiQe6mQFr67ZQU0RPxkTeU"
 
 	minioClient, err = minio.New(endpoint, &minio.Options{
 		Creds:  credentials.NewStaticV4(accessKeyID, secretAccessKey, ""),
@@ -96,6 +106,8 @@ func Init() {
 	if err != nil {
 		log.Fatal("初始化minio错误: " + err.Error())
 	}
+
 	MakeBucket(context.Background(), "video")
 	MakeBucket(context.Background(), "snapshot")
 }
+
