@@ -19,7 +19,7 @@ package constants
 // connection information
 const (
 	//MYSQL配置
-	MySQLDefaultDSN = "douyin:douyin123@tcp(127.0.0.1:13306)/douyin?charset=utf8&parseTime=True&loc=Local" 
+	MySQLDefaultDSN = "douyin:douyin123@tcp(127.0.0.1:13306)/douyin?charset=utf8&parseTime=True&loc=Local"
 )
 
 // constants in the project
@@ -34,6 +34,9 @@ const (
 	VideoFeedCount       = 30
 	FavoriteActionType   = 1
 	UnFavoriteActionType = 2
+	MinioEndPoint        = "9000"
+	MinioAccessKeyID     = "1"
+	MinioSecretAccessKey = "SztX8sYOGBI9JnCcB7Im"
 
 	MinioVideoBucketName = "videobucket"
 	MinioImgBucketName   = "imagebucket"
