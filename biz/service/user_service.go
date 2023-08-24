@@ -46,3 +46,5 @@ func (s *UserService) UserRegister(req *user.DouyinUserRegisterRequest) (user_id
 func (s *UserService) UserInfo(req *user.DouyinUserRequest) (*common.User, error) {
 	return nil, nil
 }
+
+//todo: GetUserInfo
