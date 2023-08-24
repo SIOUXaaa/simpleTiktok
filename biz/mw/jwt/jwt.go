@@ -45,6 +45,7 @@ func InitJWT() {
 				return nil, err
 			}
 			c.Set("user_id", user.ID)
+			c.Set("current_user_id", user.ID)
 			return user.ID, nil
 		},
 		Authorizator: func(data interface{}, ctx context.Context, c *app.RequestContext) bool {

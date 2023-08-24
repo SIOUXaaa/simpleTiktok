@@ -67,8 +67,8 @@ func (s *FeedService) CopyVideos(result *[]*common.Video, data *[]*db.Video, use
 func (s *FeedService) createVideos(data *db.Video, userId int64) *common.Video {
 	video := &common.Video{
 		Id:            data.ID,
-		PlayUrl:       utils.URLconvert(s.ctx, s.c, data.PlayURL),
-		CoverUrl:      utils.URLconvert(s.ctx, s.c, data.CoverURL),
+		PlayUrl:       utils.URLconvert(data.PlayURL),
+		CoverUrl:      utils.URLconvert(data.CoverURL),
 		Title:         data.Title,
 		CommentCount:  1000,
 		FavoriteCount: 1000,

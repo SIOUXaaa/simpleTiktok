@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"mime/multipart"
+	"simpleTiktok/pkg/constants"
 
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
@@ -95,12 +96,9 @@ func createPolicy (bucketName string) string {
 
 func Init() {
 	var err error
-	endpoint := "127.0.0.1:9000"
-	accessKeyID := "n4PBJzjWFTLyVlstiziA"
-	secretAccessKey := "4AZemVSPlHBVDZNNFdxiQe6mQFr67ZQU0RPxkTeU"
 
-	minioClient, err = minio.New(endpoint, &minio.Options{
-		Creds:  credentials.NewStaticV4(accessKeyID, secretAccessKey, ""),
+	minioClient, err = minio.New(constants.MinioEndPoint, &minio.Options{
+		Creds:  credentials.NewStaticV4(constants.MinioAccessKeyID, constants.MinioSecretKey, ""),
 		Secure: false,
 	})
 	if err != nil {

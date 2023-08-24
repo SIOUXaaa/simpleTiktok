@@ -35,9 +35,12 @@ const (
 	FavoriteActionType   = 1
 	UnFavoriteActionType = 2
 
-	MinioPath            = "http://localhost:9000/"
+	MinioEndPoint        = "8.130.69.85:9000"
+	MinioPath            = "http://8.130.69.85:9000/"
 	MinioVideoBucketName = "video"
 	MinioImgBucketName   = "image"
+	MinioAccessKeyID     = "BQC4APkLaJcrMGelVuw2"
+	MinioSecretKey       = "iCVlLZ6w3DPhf8Hi7J9K2t13mFEJudWMn564zr9U"
 
 	TestSign       = "测试账号！ offer"
 	TestAva        = "avatar/test1.jpg"
