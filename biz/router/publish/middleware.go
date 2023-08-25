@@ -3,8 +3,9 @@
 package publish
 
 import (
-	"github.com/cloudwego/hertz/pkg/app"
 	"simpleTiktok/biz/mw/jwt"
+
+	"github.com/cloudwego/hertz/pkg/app"
 )
 
 func rootMw() []app.HandlerFunc {

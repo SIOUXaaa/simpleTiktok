@@ -6,8 +6,7 @@ import (
 	"fmt"
 	"log"
 	"mime/multipart"
-	"net/url"
-	"time"
+	"simpleTiktok/pkg/constants"
 
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
@@ -15,13 +14,13 @@ import (
 
 var minioClient *minio.Client
 
-func MakeBucket(ctx context.Context, bucketName string, opts minio.MakeBucketOptions) {
+func MakeBucket(ctx context.Context, bucketName string) {
 	exists, err := minioClient.BucketExists(ctx, bucketName)
 	if err != nil {
 		fmt.Println(err)
 	}
 	if !exists {
-		err := minioClient.MakeBucket(ctx, bucketName, opts)
+		err := minioClient.MakeBucket(ctx, bucketName, minio.MakeBucketOptions{})
 		if err != nil {
 			fmt.Println("make bucket失败: " + err.Error())
 			return
@@ -29,20 +28,16 @@ func MakeBucket(ctx context.Context, bucketName string, opts minio.MakeBucketOpt
 		fmt.Println("新建bucket成功")
 	}
 	fmt.Println("bucket: " + bucketName + "已存在")
-}
-
-func GetObjectURL(ctx context.Context, bucketName, objectName string, opts minio.GetObjectOptions) (*url.URL, error) {
-	exp := time.Hour * 24
-	url, err := minioClient.PresignedGetObject(ctx, bucketName, objectName, exp, make(url.Values))
-	if err != nil {
-		fmt.Println("获取object: " + objectName + "失败")
-		return nil, err
+	err = minioClient.SetBucketPolicy(ctx, bucketName, createPolicy(bucketName))
+	if err !=  nil {
+		fmt.Println(err)
 	}
-
-	return url, err
+	fmt.Println("bucket: set policy to public")
 }
 
-func PutObjectByBuf(ctx context.Context, bucketName, objectName string, buf *bytes.Buffer, opts minio.PutObjectOptions) (minio.UploadInfo, error) {
+
+
+func PutObjectByBuf(ctx context.Context, bucketName, objectName string, buf *bytes.Buffer) (minio.UploadInfo, error) {
 	exists, err := minioClient.BucketExists(ctx, bucketName)
 	if err != nil {
 		fmt.Println("查询bucket失败" + err.Error())
@@ -52,7 +47,7 @@ func PutObjectByBuf(ctx context.Context, bucketName, objectName string, buf *byt
 		fmt.Println("bucket不存在")
 		return minio.UploadInfo{}, nil
 	}
-	info, err := minioClient.PutObject(ctx, bucketName, objectName, buf, int64(buf.Len()), opts)
+	info, err := minioClient.PutObject(ctx, bucketName, objectName, buf, int64(buf.Len()), minio.PutObjectOptions{})
 	if err != nil {
 		fmt.Println("上传object失败")
 		return minio.UploadInfo{}, nil
@@ -60,7 +55,7 @@ func PutObjectByBuf(ctx context.Context, bucketName, objectName string, buf *byt
 	return info, nil
 }
 
-func PutObject(ctx context.Context, bucketName string, file *multipart.FileHeader, opts minio.PutObjectOptions) (minio.UploadInfo, error) {
+func PutObject(ctx context.Context, bucketName string, file *multipart.FileHeader) (minio.UploadInfo, error) {
 	exists, err := minioClient.BucketExists(ctx, bucketName)
 	if err != nil {
 		fmt.Println("查询bucket失败" + err.Error())
@@ -75,7 +70,7 @@ func PutObject(ctx context.Context, bucketName string, file *multipart.FileHeade
 		fmt.Println("打开文件失败: " + err.Error())
 		return minio.UploadInfo{}, err
 	}
-	info, err := minioClient.PutObject(ctx, bucketName, file.Filename, f, file.Size, opts)
+	info, err := minioClient.PutObject(ctx, bucketName, file.Filename, f, file.Size, minio.PutObjectOptions{})
 	if err != nil {
 		fmt.Println("上传object失败")
 		return minio.UploadInfo{}, err
@@ -83,19 +78,34 @@ func PutObject(ctx context.Context, bucketName string, file *multipart.FileHeade
 	return info, nil
 }
 
+func createPolicy (bucketName string) string {
+	return `{
+		"Version": "2012-10-17",
+		"Statement": [
+			{
+				"Action": ["s3:GetObject"],
+				"Effect": "Allow",
+				"Principal": "*",
+				"Resource": ["arn:aws:s3:::` + bucketName + `/*"],
+				"Sid": ""
+			}
+		]
+	}`
+}
+
+
 func Init() {
 	var err error
-	endpoint := "127.0.0.1:9000"
-	accessKeyID := "SztX8sYOGBl9JnCcB7Im"
-	secretAccessKey := "nYRmoFcVXvBheSfLXq74VNxCuzuQOrDBh2wiRSio"
 
-	minioClient, err = minio.New(endpoint, &minio.Options{
-		Creds:  credentials.NewStaticV4(accessKeyID, secretAccessKey, ""),
+	minioClient, err = minio.New(constants.MinioEndPoint, &minio.Options{
+		Creds:  credentials.NewStaticV4(constants.MinioAccessKeyID, constants.MinioSecretKey, ""),
 		Secure: false,
 	})
 	if err != nil {
 		log.Fatal("初始化minio错误: " + err.Error())
 	}
-	MakeBucket(context.Background(), "video", minio.MakeBucketOptions{})
-	MakeBucket(context.Background(), "snapshot", minio.MakeBucketOptions{})
+
+	MakeBucket(context.Background(), "video")
+	MakeBucket(context.Background(), "snapshot")
 }
+

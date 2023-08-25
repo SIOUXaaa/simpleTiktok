@@ -16,6 +16,8 @@ cd simpleTiktok
 docker-compose up -d
 ```
 
+---
+**minio改为部署到服务器上了，服务器地址在constants里**
 ## docker部署minio
 
 minio的后台网页：localhost:9001，API端口：localhost:9000
@@ -26,6 +28,14 @@ minio的后台网页：localhost:9001，API端口：localhost:9000
 # 使用即可同时启动mysql与minio
 docker-compose up -d 
 ```
+---
+
+## 上传视频
+视频和封面保存格式如下
+
+| play_url    | cover_url       |
+| ----------- | --------------- |
+| video/1.mp4 | snapshot/1.jpeg |
 
 
 ## 启动
