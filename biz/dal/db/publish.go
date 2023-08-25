@@ -12,6 +12,8 @@ type Video struct {
 	CoverURL    string
 	PublishTime time.Time
 	Title       string
+	FavoriteCount int64
+	CommentCount int64
 }
 
 func (Video) TableName() string {
