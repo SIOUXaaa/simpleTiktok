@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"simpleTiktok/biz/dal/db"
+	"simpleTiktok/biz/model/common"
 	"simpleTiktok/biz/model/interact/favorite"
 	"simpleTiktok/pkg/constants"
 	"simpleTiktok/pkg/errno"
@@ -57,4 +58,19 @@ func (f *FavortieService) Action(req *favorite.DouyinFavoriteActionRequest) erro
 	}
 
 	return nil
+}
+
+func GetFavoriteList(userId int64) ([]*common.Video, error) {
+	favorites, err := db.GetFavoriteListByUserId(userId)
+
+	if err != nil {
+		return nil, err
+	}
+
+	videoList := make([]common.Video, len(favorites))
+
+	for index, value := range favorites {
+
+	}
+
 }

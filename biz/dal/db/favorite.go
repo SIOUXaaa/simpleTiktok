@@ -50,3 +50,11 @@ func DeleteFavoriteAndDecreaseVedioLikes(favorite *Favorites) (int64, error) {
 	}
 	return id, nil
 }
+
+func GetFavoriteListByUserId(userId int64) ([]*Favorites, error) {
+	var favorites []*Favorites
+	if err := DB.Where("user_id = ?", userId).Find(&favorites).Error; err != nil {
+		return nil, err
+	}
+	return favorites, nil
+}

@@ -53,7 +53,20 @@ func FavoriteList(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	resp := new(favorite.DouyinFavoriteListResponse)
+	videoList, err := service.GetFavoriteList(req.GetUserId())
 
-	c.JSON(consts.StatusOK, resp)
+	if err != nil {
+		resp := utils.BuildBaseResp(err)
+		c.JSON(consts.StatusOK, favorite.DouyinFavoriteListResponse{
+			StatusCode: resp.StatusCode,
+			StatusMsg:  resp.StatusMsg,
+		})
+		return
+	}
+
+	c.JSON(consts.StatusOK, favorite.DouyinFavoriteListResponse{
+		StatusCode: errno.SuccessCode,
+		StatusMsg:  errno.SuccessMsg,
+		VideoList:  videoList,
+	})
 }
