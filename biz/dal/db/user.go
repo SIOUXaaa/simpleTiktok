@@ -28,7 +28,7 @@ func CreateUser(user *User) (int64, error) {
 
 func QueryUserById(user_id int64) (*User, error) {
 	var user User
-	if err := DB.Where("id = ?", user_id).Find(&user).Error; err != nil {
+	if err := DB.Model(&User{}).Where("id = ?", user_id).Find(&user).Error; err != nil {
 		return nil, err
 	}
 	if user == (User{}){	//用户不存在

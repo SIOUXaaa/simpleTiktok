@@ -35,14 +35,21 @@ func User(ctx context.Context, c *app.RequestContext) {
 	}
 
 	userInfo, err := service.NewUserService(ctx, c).UserInfo(&req)
+	if err !=  nil {
+		fmt.Println("get user info failed: " + err.Error())
+		resp := utils.BuildBaseResp(err)
+		c.JSON(consts.StatusOK, user.DouyinUserResponse{
+			StatusCode: resp.StatusCode,
+			StatusMsg:  resp.StatusMsg,
+		})
+		return
+	}
 
-	resp := utils.BuildBaseResp(err)
 	c.JSON(consts.StatusOK, user.DouyinUserResponse{
-		StatusCode: resp.StatusCode,
-		StatusMsg:  resp.StatusMsg,
+		StatusCode: errno.SuccessCode,
+		StatusMsg:  errno.SuccessMsg,
 		User:       userInfo,
 	})
-
 }
 
 // UserRegister .
