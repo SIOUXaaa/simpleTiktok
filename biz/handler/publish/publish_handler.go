@@ -25,7 +25,7 @@ func PublishAction(ctx context.Context, c *app.RequestContext) {
 		resp := utils.BuildBaseResp(err)
 		c.JSON(consts.StatusOK, publish.DouyinPublishActionResponse{
 			StatusCode: resp.StatusCode,
-			StatusMsg: resp.StatusMsg,
+			StatusMsg:  resp.StatusMsg,
 		})
 		return
 	}
@@ -36,13 +36,13 @@ func PublishAction(ctx context.Context, c *app.RequestContext) {
 		resp := utils.BuildBaseResp(err)
 		c.JSON(consts.StatusOK, publish.DouyinPublishActionResponse{
 			StatusCode: resp.StatusCode,
-			StatusMsg: resp.StatusMsg,
+			StatusMsg:  resp.StatusMsg,
 		})
 		return
 	}
 	c.JSON(consts.StatusOK, publish.DouyinPublishActionResponse{
 		StatusCode: errno.SuccessCode,
-		StatusMsg: errno.SuccessMsg,
+		StatusMsg:  errno.SuccessMsg,
 	})
 
 }
@@ -58,7 +58,14 @@ func PublishList(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	resp := new(publish.DouyinPublishListResponse)
-
+	resp, err := service.NewPublishService(ctx, c).PublishList(&req)
+	if err != nil {
+		bresp := utils.BuildBaseResp(err)
+		resp.StatusCode = bresp.StatusCode
+		resp.StatusMsg = bresp.StatusMsg
+		c.JSON(consts.StatusOK, resp)
+	}
+	resp.StatusCode = errno.SuccessCode
+	resp.StatusMsg = errno.SuccessMsg
 	c.JSON(consts.StatusOK, resp)
 }
