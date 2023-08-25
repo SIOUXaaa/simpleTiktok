@@ -6,6 +6,9 @@ import (
 	"context"
 
 	favorite "simpleTiktok/biz/model/interact/favorite"
+	"simpleTiktok/biz/service"
+	"simpleTiktok/pkg/errno"
+	"simpleTiktok/pkg/utils"
 
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
@@ -22,9 +25,21 @@ func FavoriteAction(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	resp := new(favorite.DouyinFavoriteActionResponse)
+	err = service.NewFavoriteService(ctx, c).Action(&req)
 
-	c.JSON(consts.StatusOK, resp)
+	if err != nil {
+		resp := utils.BuildBaseResp(err)
+		c.JSON(consts.StatusOK, favorite.DouyinFavoriteActionResponse{
+			StatusCode: resp.StatusCode,
+			StatusMsg:  resp.StatusMsg,
+		})
+		return
+	}
+
+	c.JSON(consts.StatusOK, favorite.DouyinFavoriteActionResponse{
+		StatusCode: errno.SuccessCode,
+		StatusMsg:  errno.SuccessMsg,
+	})
 }
 
 // FavoriteList .
@@ -38,7 +53,20 @@ func FavoriteList(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	resp := new(favorite.DouyinFavoriteListResponse)
+	videoList, err := service.GetFavoriteList(req.GetUserId())
 
-	c.JSON(consts.StatusOK, resp)
+	if err != nil {
+		resp := utils.BuildBaseResp(err)
+		c.JSON(consts.StatusOK, favorite.DouyinFavoriteListResponse{
+			StatusCode: resp.StatusCode,
+			StatusMsg:  resp.StatusMsg,
+		})
+		return
+	}
+
+	c.JSON(consts.StatusOK, favorite.DouyinFavoriteListResponse{
+		StatusCode: errno.SuccessCode,
+		StatusMsg:  errno.SuccessMsg,
+		VideoList:  videoList,
+	})
 }
