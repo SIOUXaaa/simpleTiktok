@@ -63,9 +63,25 @@ func InitJWT() {
 				StatusCode: errno.AuthorizationFailedErr.ErrCode,
 				StatusMsg:  message,
 			})
-		},
+		}, // TokenLookup is a string in the form of "<source>:<name>" that is used
+		// to extract token from the request.
+		// Optional. Default value "header:Authorization".
+		// Possible values:
+		// - "header:<name>"
+		// - "query:<name>"
+		// - "cookie:<name>"
+		// - "param:<name>"
+		TokenLookup: "header: Authorization, query: token, cookie: jwt",
+		// TokenLookup: "query:token",
+		// TokenLookup: "cookie:token",
+
+		// TokenHeadName is a string in the header. Default value is "Bearer". If you want empty value, use WithoutDefaultTokenHeadName.
+		TokenHeadName: "Bearer",
+
+		// TimeFunc provides the current time. You can override it to use another time value. This is useful for testing or if your server uses a different time zone than your tokens.
+		TimeFunc: time.Now,
 		LoginResponse: func(ctx context.Context, c *app.RequestContext, code int, token string, time time.Time) {
-			c.Set("token",token)
+			c.Set("token", token)
 		},
 		HTTPStatusMessageFunc: func(e error, ctx context.Context, c *app.RequestContext) string {
 			resp := utils.BuildBaseResp(e)

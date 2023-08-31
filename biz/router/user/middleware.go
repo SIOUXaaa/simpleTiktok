@@ -3,8 +3,8 @@
 package user
 
 import (
-	"simpleTiktok/biz/mw/jwt"
 	"github.com/cloudwego/hertz/pkg/app"
+	"simpleTiktok/biz/mw/jwt"
 )
 
 func rootMw() []app.HandlerFunc {
@@ -24,7 +24,7 @@ func _userMw() []app.HandlerFunc {
 
 func _user0Mw() []app.HandlerFunc {
 	return []app.HandlerFunc{
-		jwt.JwtMiddleware.LoginHandler,
+		jwt.JwtMiddleware.MiddlewareFunc(),
 	}
 }
 
