@@ -6,14 +6,14 @@ import (
 )
 
 type Video struct {
-	ID          int64
-	AuthorID    int64
-	PlayURL     string
-	CoverURL    string
-	PublishTime time.Time
-	Title       string
+	ID            int64
+	AuthorID      int64
+	PlayURL       string
+	CoverURL      string
+	PublishTime   time.Time
+	Title         string
 	FavoriteCount int64
-	CommentCount int64
+	CommentCount  int64
 }
 
 func (Video) TableName() string {
@@ -79,4 +79,12 @@ func CheckVideoExistById(video_id int64) (bool, error) {
 		return false, nil
 	}
 	return true, nil
+}
+
+func GetVideoById(video_id int64) (*Video, error) {
+	var video Video
+	if err := DB.Where("id = ?", video_id).Find(&video).Error; err != nil {
+		return nil, err
+	}
+	return &video, nil
 }

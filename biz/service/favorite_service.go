@@ -67,10 +67,34 @@ func GetFavoriteList(userId int64) ([]*common.Video, error) {
 		return nil, err
 	}
 
-	videoList := make([]common.Video, len(favorites))
+	videoList := make([]*common.Video, len(favorites))
 
 	for index, value := range favorites {
-
+		id := value.VideoId
+		//TODO 获取作者完整信息
+		author := nil
+		videoInfo, err := db.GetVideoById(id)
+		if err != nil {
+			return nil, err
+		}
+		playUrl := videoInfo.PlayURL
+		coverUrl := videoInfo.CoverURL
+		favoriteCount := videoInfo.FavoriteCount
+		commentCount := videoInfo.CommentCount
+		isFavorite := true
+		title := videoInfo.Title
+		video := common.Video{
+			Id:            id,
+			Author:        author,
+			PlayUrl:       playUrl,
+			CoverUrl:      coverUrl,
+			FavoriteCount: favoriteCount,
+			CommentCount:  commentCount,
+			IsFavorite:    isFavorite,
+			Title:         title,
+		}
+		videoList[index] = &video
 	}
 
+	return videoList, nil
 }
