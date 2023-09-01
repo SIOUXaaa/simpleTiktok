@@ -53,7 +53,7 @@ func (s *UserService) UserInfo(req *user.DouyinUserRequest) (*common.User, error
 	wg.Add(4)
 
 	userInfo.Id = req.UserId
-	go func(){
+	go func() {
 		flag := true
 		user, err := db.QueryUserById(req.UserId)
 		if err != nil {
@@ -74,7 +74,7 @@ func (s *UserService) UserInfo(req *user.DouyinUserRequest) (*common.User, error
 		wg.Done()
 	}()
 
-	go func(){
+	go func() {
 		favorite_count, err := db.GetFavoriteCount(req.UserId)
 		if err != nil {
 			errChan <- err
@@ -84,7 +84,7 @@ func (s *UserService) UserInfo(req *user.DouyinUserRequest) (*common.User, error
 		wg.Done()
 	}()
 
-	go func(){
+	go func() {
 		total_favorite, err := db.GetTotalFavorited(req.UserId)
 		if err != nil {
 			errChan <- err
@@ -94,21 +94,21 @@ func (s *UserService) UserInfo(req *user.DouyinUserRequest) (*common.User, error
 		wg.Done()
 	}()
 
-	go func(){
+	go func() {
 		work_count, err := db.GetWorkCount(req.UserId)
 		if err != nil {
 			errChan <- err
-		}else{
-			userInfo.WorkCount= work_count
+		} else {
+			userInfo.WorkCount = work_count
 		}
 		wg.Done()
 	}()
-	
+
 	wg.Wait()
-	select{
-		case err := <-errChan:
-			return &common.User{}, err
-		default:
+	select {
+	case err := <-errChan:
+		return &common.User{}, err
+	default:
 	}
 	userInfo.Id = req.UserId
 	userInfo.FollowCount = 0
@@ -118,3 +118,74 @@ func (s *UserService) UserInfo(req *user.DouyinUserRequest) (*common.User, error
 	return userInfo, nil
 }
 
+func UserInfoByUserId(userId int64) (*common.User, error) {
+	userInfo := &common.User{}
+	errChan := make(chan error, 4)
+	defer close(errChan)
+	var wg sync.WaitGroup
+	wg.Add(4)
+
+	go func() {
+		flag := true
+		user, err := db.QueryUserById(userId)
+		if err != nil {
+			fmt.Println("get user info error: " + err.Error())
+			errChan <- err
+			flag = false
+		}
+		if *user == (db.User{}) {
+			errChan <- errno.UserIsNotExistErr
+			flag = false
+		}
+		if flag {
+			userInfo.Name = user.UserName
+			userInfo.Avatar = user.Avatar
+			userInfo.BackgroundImage = user.BackgroundImage
+			userInfo.Signature = user.Signature
+		}
+		wg.Done()
+	}()
+
+	go func() {
+		favorite_count, err := db.GetFavoriteCount(userId)
+		if err != nil {
+			errChan <- err
+		} else {
+			userInfo.FavoriteCount = favorite_count
+		}
+		wg.Done()
+	}()
+
+	go func() {
+		total_favorite, err := db.GetTotalFavorited(userId)
+		if err != nil {
+			errChan <- err
+		} else {
+			userInfo.TotalFavorited = total_favorite
+		}
+		wg.Done()
+	}()
+
+	go func() {
+		work_count, err := db.GetWorkCount(userId)
+		if err != nil {
+			errChan <- err
+		} else {
+			userInfo.WorkCount = work_count
+		}
+		wg.Done()
+	}()
+
+	wg.Wait()
+	select {
+	case err := <-errChan:
+		return &common.User{}, err
+	default:
+	}
+	userInfo.Id = userId
+	userInfo.FollowCount = 0
+	userInfo.FollowerCount = 0
+	userInfo.IsFollow = false
+
+	return userInfo, nil
+}

@@ -72,7 +72,10 @@ func GetFavoriteList(userId int64) ([]*common.Video, error) {
 	for index, value := range favorites {
 		id := value.VideoId
 		//TODO 获取作者完整信息
-		author := nil
+		author, err := UserInfoByUserId(value.UserId)
+		if err != nil {
+			return nil, err
+		}
 		videoInfo, err := db.GetVideoById(id)
 		if err != nil {
 			return nil, err
