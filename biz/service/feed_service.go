@@ -3,13 +3,15 @@ package service
 import (
 	"context"
 	"fmt"
-	"github.com/cloudwego/hertz/pkg/app"
+	"log"
 	"simpleTiktok/biz/dal/db"
 	"simpleTiktok/biz/model/basic/feed"
 	"simpleTiktok/biz/model/common"
 	"simpleTiktok/pkg/constants"
 	"simpleTiktok/pkg/utils"
 	"time"
+
+	"github.com/cloudwego/hertz/pkg/app"
 )
 
 type FeedService struct {
@@ -65,14 +67,23 @@ func (s *FeedService) CopyVideos(result *[]*common.Video, data *[]*db.Video, use
 }
 
 func (s *FeedService) createVideos(data *db.Video, userId int64) *common.Video {
+	isFavorite, err := db.QueryIsFavorite(userId, data.ID)
+	if err != nil {
+		return nil
+	}
+	favoriteCount, err := db.GetFavoriteCount(data.ID)
+	if err != nil {
+		return nil
+	}
+
 	video := &common.Video{
 		Id:            data.ID,
 		PlayUrl:       utils.URLconvert(data.PlayURL),
 		CoverUrl:      utils.URLconvert(data.CoverURL),
 		Title:         data.Title,
-		CommentCount:  1000,
-		FavoriteCount: 1000,
-		IsFavorite:    true,
+		CommentCount:  1,
+		FavoriteCount: favoriteCount,
+		IsFavorite:    isFavorite,
 	}
 
 	// TODO
@@ -101,18 +112,9 @@ func (s *FeedService) createVideos(data *db.Video, userId int64) *common.Video {
 	//}
 	//}()
 
-	video.Author = &common.User{
-		Id:              1000,
-		Name:            "test",
-		FollowCount:     1000,
-		FollowerCount:   110,
-		IsFollow:        false,
-		Avatar:          "11",
-		BackgroundImage: "11",
-		Signature:       "11",
-		TotalFavorited:  1110,
-		WorkCount:       110,
-		FavoriteCount:   110,
+	video.Author, err = UserInfoByUserId(data.AuthorID)
+	if err != nil {
+		log.Printf("GetUserInfo func error:" + err.Error())
 	}
 
 	//video.CommentCount = 0

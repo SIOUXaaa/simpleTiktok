@@ -27,11 +27,11 @@ func (f *FavortieService) Action(req *favorite.DouyinFavoriteActionRequest) erro
 	videoId := req.GetVideoId()
 	actionType := req.GetActionType()
 
-	favorite, err := db.QueryFavoriteByUserIdAndVedioId(userId.(int64), videoId)
+	favorite, err := db.QueryFavoriteByUserIdAndVideoId(userId.(int64), videoId)
 
 	if actionType == constants.FavoriteActionType {
 		if err == gorm.ErrRecordNotFound { //之前未给这条视频点赞，需要进行点赞操作
-			_, err := db.CreateFavoriteAndIncreaseVedioLikes(&db.Favorites{
+			_, err := db.CreateFavoriteAndIncreaseVideoLikes(&db.Favorites{
 				UserId:    userId.(int64),
 				VideoId:   videoId,
 				CreatedAt: time.Now(),
@@ -51,7 +51,7 @@ func (f *FavortieService) Action(req *favorite.DouyinFavoriteActionRequest) erro
 			return err
 		}
 		//撤销点赞
-		_, err := db.DeleteFavoriteAndDecreaseVedioLikes(favorite)
+		_, err := db.DeleteFavoriteAndDecreaseVideoLikes(favorite)
 		if err != nil {
 			return err
 		}

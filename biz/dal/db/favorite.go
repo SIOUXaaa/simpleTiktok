@@ -21,15 +21,15 @@ func (Favorites) TableName() string {
 	return constants.FavoritesTableName
 }
 
-func QueryFavoriteByUserIdAndVedioId(userId int64, videoId int64) (*Favorites, error) {
+func QueryFavoriteByUserIdAndVideoId(userId int64, videoId int64) (*Favorites, error) {
 	var favorite = Favorites{}
-	if err := DB.Where("user_id = ? AND vedio_id = ?", userId, videoId).Find(&favorite).Error; err != nil {
+	if err := DB.Where("user_id = ? AND video_id = ?", userId, videoId).Find(&favorite).Error; err != nil {
 		return nil, gorm.ErrRecordNotFound
 	}
 	return &favorite, nil
 }
 
-func CreateFavoriteAndIncreaseVedioLikes(favorite *Favorites) (int64, error) {
+func CreateFavoriteAndIncreaseVideoLikes(favorite *Favorites) (int64, error) {
 	if err := DB.Select("UserId", "VideoId", "CreateAt").Create(&favorite).Error; err != nil {
 		return 0, err
 	}
@@ -44,9 +44,9 @@ func CreateFavoriteAndIncreaseVedioLikes(favorite *Favorites) (int64, error) {
 	return favorite.ID, nil
 }
 
-func DeleteFavoriteAndDecreaseVedioLikes(favorite *Favorites) (int64, error) {
+func DeleteFavoriteAndDecreaseVideoLikes(favorite *Favorites) (int64, error) {
 	id := favorite.ID
-	if err := DB.Delete(favorite).Error; err != nil {
+	if err := DB.Delete(&favorite).Error; err != nil {
 		return 0, err
 	}
 	return id, nil
@@ -81,4 +81,24 @@ func GetFavoriteCount(user_id int64) (int64, error) {
 		return -1, err
 	}
 	return favorite_count, nil
+}
+
+func QueryIsFavorite(userId int64, videoId int64) (bool, error) {
+	var favorite Favorites
+	err := DB.Model(&Favorites{}).Where("user_id = ? AND video_id = ?", userId, videoId).First(&favorite).Error
+	if err == gorm.ErrRecordNotFound {
+		return false, nil
+	}
+	if err != nil {
+		return false, err
+	}
+	return true, nil
+}
+
+func GetFavoriteCountOfVideo(videoId int64) (int64, error) {
+	var count int64
+	if err := DB.Model(&Favorites{}).Where("video_id = ?", videoId).Count(&count).Error; err != nil {
+		return -1, err
+	}
+	return count, nil
 }
