@@ -4,12 +4,9 @@ package comment
 
 import (
 	"context"
-<<<<<<< HEAD
 	"simpleTiktok/biz/service"
 	"simpleTiktok/pkg/errno"
 	"simpleTiktok/pkg/utils"
-=======
->>>>>>> main
 
 	comment "simpleTiktok/biz/model/interact/comment"
 
