@@ -55,6 +55,5 @@ require (
 	github.com/u2takey/ffmpeg-go v0.5.0
 	golang.org/x/arch v0.0.0-20210923205945-b76863e36670 // indirect
 	golang.org/x/sys v0.11.0 // indirect
-	golang.org/x/tools v0.12.0
 	gorm.io/plugin/opentracing v0.0.0-20211220013347-7d2b2af23560
 )
