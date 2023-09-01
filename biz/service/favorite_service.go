@@ -7,6 +7,7 @@ import (
 	"simpleTiktok/biz/model/interact/favorite"
 	"simpleTiktok/pkg/constants"
 	"simpleTiktok/pkg/errno"
+	"simpleTiktok/pkg/utils"
 	"time"
 
 	"github.com/cloudwego/hertz/pkg/app"
@@ -80,8 +81,8 @@ func GetFavoriteList(userId int64) ([]*common.Video, error) {
 		if err != nil {
 			return nil, err
 		}
-		playUrl := videoInfo.PlayURL
-		coverUrl := videoInfo.CoverURL
+		playUrl :=  utils.URLconvert(videoInfo.PlayURL)
+		coverUrl :=  utils.URLconvert(videoInfo.CoverURL)
 		favoriteCount := videoInfo.FavoriteCount
 		commentCount := videoInfo.CommentCount
 		isFavorite := true

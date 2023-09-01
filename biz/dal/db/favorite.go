@@ -22,11 +22,11 @@ func (Favorites) TableName() string {
 }
 
 func QueryFavoriteByUserIdAndVideoId(userId int64, videoId int64) (*Favorites, error) {
-	var favorite = Favorites{}
-	if err := DB.Where("user_id = ? AND video_id = ?", userId, videoId).Find(&favorite).Error; err != nil {
-		return nil, gorm.ErrRecordNotFound
-	}
-	return &favorite, nil
+    var favorite = Favorites{}
+    if err := DB.Where("user_id = ? AND video_id = ?", userId, videoId).First(&favorite).Error; err != nil {
+        return nil, gorm.ErrRecordNotFound
+    }
+    return &favorite, nil
 }
 
 func CreateFavoriteAndIncreaseVideoLikes(favorite *Favorites) (int64, error) {
