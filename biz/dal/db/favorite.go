@@ -49,9 +49,16 @@ func DeleteFavoriteAndDecreaseVideoLikes(favorite *Favorites) (int64, error) {
 	if err := DB.Delete(&favorite).Error; err != nil {
 		return 0, err
 	}
+	var video = Video{}
+	if err := DB.First(&video, favorite.VideoId).Error; err != nil {
+		return 0, err
+	}
+	video.FavoriteCount--
+	if err := DB.Save(&video).Error; err != nil {
+		return 0, err
+	}
 	return id, nil
 }
-
 func GetFavoriteListByUserId(userId int64) ([]*Favorites, error) {
 	var favorites []*Favorites
 	if err := DB.Where("user_id = ?", userId).Find(&favorites).Error; err != nil {
