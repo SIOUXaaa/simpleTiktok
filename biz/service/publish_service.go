@@ -50,7 +50,7 @@ func (s *PublishService) PublishAction(req *publish.DouyinPublishActionRequest) 
 
 	_, err = db.CreateVideo(&db.Video{
 		AuthorID:    user_id,
-		PlayURL:     "video/" + fileName + ".mp4",
+		PlayURL:     "video/" + req.Data.Filename,
 		CoverURL:    "snapshot/" + fileName + ".png",
 		PublishTime: t,
 		Title:       title,

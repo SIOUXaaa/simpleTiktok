@@ -81,3 +81,11 @@ func GetCommentListByVideoID(video_id int64) ([]*Comment, error) {
 	}
 	return comment_list, nil
 }
+
+func GetCommentCountByVideoID(video_id int64) (int64, error) {
+	var count int64
+	if err := DB.Model(&Comment{}).Where("video_id = ?", video_id).Count(&count).Error; err != nil {
+		return -1, err
+	}
+	return count, nil
+}

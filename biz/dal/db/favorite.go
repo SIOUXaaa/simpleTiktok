@@ -93,12 +93,12 @@ func GetFavoriteCount(user_id int64) (int64, error) {
 
 func QueryIsFavorite(userId int64, videoId int64) (bool, error) {
 	var favorite Favorites
-	err := DB.Model(&Favorites{}).Where("user_id = ? AND video_id = ?", userId, videoId).First(&favorite).Error
-	if err == gorm.ErrRecordNotFound {
-		return false, nil
-	}
+	err := DB.Model(&Favorites{}).Where("user_id = ? AND video_id = ?", userId, videoId).Find(&favorite).Error
 	if err != nil {
 		return false, err
+	}
+	if favorite == (Favorites{}) {
+		return false, nil
 	}
 	return true, nil
 }

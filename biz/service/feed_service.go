@@ -75,13 +75,17 @@ func (s *FeedService) createVideos(data *db.Video, userId int64) *common.Video {
 	if err != nil {
 		return nil
 	}
+	commentCount, err := db.GetCommentCountByVideoID(data.ID)
+	if err != nil {
+		return nil
+	}
 
 	video := &common.Video{
 		Id:            data.ID,
 		PlayUrl:       utils.URLconvert(data.PlayURL),
 		CoverUrl:      utils.URLconvert(data.CoverURL),
 		Title:         data.Title,
-		CommentCount:  1,
+		CommentCount:  commentCount,
 		FavoriteCount: favoriteCount,
 		IsFavorite:    isFavorite,
 	}
