@@ -49,4 +49,3 @@ go build
 
 **Hertz文档：** https://www.cloudwego.io/zh/docs/hertz/overview/
 
-**参考项目：** https://github.com/cloudwego/hertz-examples/tree/main/bizdemo/tiktok_demo
